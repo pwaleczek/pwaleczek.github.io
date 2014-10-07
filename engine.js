@@ -413,6 +413,8 @@ var activeTilesList = [
 
 
 var Engine = {
+	renderWidth: 1090,
+	renderHeight: 410,
 	scale: 20,
 	sprite: {
 		w: 38,
@@ -515,16 +517,10 @@ var Engine = {
 
 		this.renderCanvas.onRender(function (delta) {
 			_engine.onRender(_engine.buffer, delta);
-		}).onStep(function (delta) {
-			_engine.onStep(delta);
-		}).onMouseUp(function (x, y) {
-			Engine.onMouseUp(x, y);
-		}).onMouseDown(function (x, y) {
-			Engine.onMouseDown(x, y);
-		}).onMouseMove(function (x, y) {
-			Engine.onMouseMove(x, y);
-		});
-
+		}).onStep(this.onStep.bind(this))
+			.onMouseUp(this.onMouseUp.bind(this))
+		  .onMouseDown(this.onMouseDown.bind(this))
+			.onMouseMove(this.onMouseMove.bind(this));
 	},
 
 	onStep: function (delta) {
@@ -666,7 +662,7 @@ var Engine = {
 				ctx.drawImage(this.pathCanvas.canvas, this.worldOffset.x, this.worldOffset.y);
 			}
 
-			ctx.font("20pt Arial").fillStyle('#fff').fillText(delta, 20, 240);
+			ctx.font("20pt Arial").fillStyle('#fff');
 			if(this.player) {
 				this.renderItems(ctx);
 
@@ -674,9 +670,9 @@ var Engine = {
 
 				this.renderEntities(ctx);
 
-				ctx.font("10pt Arial").fillText('[' + this.player.position.raw.x + ', ' + this.player.position.raw.y + ']', 20, 260);
-				ctx.font("10pt Arial").fillText('progress: ' + this.player.moveProggres, 20, 280);
-				ctx.font("10pt Arial").fillText('speed: ' + this.player.speed, 20, 300);
+				// ctx.font("10pt Arial").fillText('[' + this.player.position.raw.x + ', ' + this.player.position.raw.y + ']', 20, 260);
+				// ctx.font("10pt Arial").fillText('progress: ' + this.player.moveProggres, 20, 280);
+				// ctx.font("10pt Arial").fillText('speed: ' + this.player.speed, 20, 300);
 			}
 			ctx.font("16pt Arial").fillText(this.label, 20, window.innerHeight - 20);
 			ctx.restore();
