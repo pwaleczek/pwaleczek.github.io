@@ -465,8 +465,8 @@ var Engine = {
 			_engine.resize();
 			// Server.initialize(function () {
 			// 	Server.connect(function (playerUID, users) {
-					console.log('server data %s', playerUID);
-					console.log(users);
+					// console.log('server data %s', playerUID);
+					// console.log(users);
 
 					var _player = {
 						uid: 'visitor',
@@ -1060,7 +1060,3 @@ var Utils = {
 		console.log('Detached [' + eventName + '] from ' + eventElement + '.');
 	}
 }
-
-Utils.attachEvent(document, 'ready', function() {
-	Engine.initialize();
-});

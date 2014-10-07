@@ -1,12 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title></title>
+    <title>Paweł Waleczek</title>
+    <meta property="og:title" content="isometric engine prototype" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="iso_proto.png" />
+    <link rel="image_src" href="iso_proto.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="paweł waleczek"/>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="/canvasquery.js"></script>
     <script src="/engine.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      .goHome {
+        display: block;
+        position: absolute;
+        bottom: 1em;
+        right: 1em;
+        background-color: #E8175D;
+      }
+      .goHome:hover {
+        background-color: #eee;
+      }
+      .goHome:hover a {
+        color: #363636;
+      }
+      a {
+        display: block;
+        color: #eee;
+        padding: 0.5em;
+        font-family: sans-serif;
+        margin: 0;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
     <canvas></canvas>
+    <script type="text/javascript">
+      Utils.attachEvent(window, 'load', function() {
+        Engine.initialize();
+      });
+
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23939407-3']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   </body>
 </html>
