@@ -1,60 +1,275 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
   <head>
-    <title>Paweł Waleczek</title>
-    <meta property="og:title" content="isometric engine prototype" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="iso_proto.png" />
-    <link rel="image_src" href="iso_proto.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="paweł waleczek"/>
-    <script src="canvasquery.js"></script>
-    <script src="engine.js"></script>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
+    <title>JS1k, 1k demo submission [ID]</title>
+    <meta charset="utf-8" />
+    <meta name="robots" content="all" />
+    <meta name="author" content="paweł waleczek" />
+    <script src="/dat.gui.js"></script>
+    <style type="text/css" media="screen, print">
+      html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure,  footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
+        margin:0;
+        padding:0;
+        border:0;
+        outline:0;
+        font-size:100%;
+        font-weight: normal;
+        vertical-align:baseline;
+        background:transparent;
+
       }
-      .goHome {
-        display: block;
+
+      #info {
+        /*width: 438px;*/
+        /*height: 92px;*/
+        background-color: rgba(0, 0, 0, 0.35);
         position: absolute;
-        bottom: 1em;
-        right: 1em;
-        background-color: #E8175D;
+        bottom: 20px;
+        right: 20px;
+        padding: 14px 10px 14px 12px;
+        font-family: "Lucida Grande", Verdana, sans-serif;
+        color: #c0c0c0;
       }
-      .goHome:hover {
-        background-color: #eee;
+
+      #info p {
+        font-size: 12px;
+        word-wrap: break-word;
+        line-height: 18px;
       }
-      .goHome:hover a {
-        color: #363636;
-      }
+
       a {
-        display: block;
-        color: #eee;
-        padding: 0.5em;
-        font-family: sans-serif;
-        margin: 0;
-        text-decoration: none;
+        text-decoration: none ;
+        color: #fff;
       }
+      .rtl {
+        text-align: right;
+        margin-right: 5px;
+      }
+
+      @media (max-width: 540px){
+        #info  {
+          width: auto;
+          left: 20px;
+        }
+        .dg.ac {
+          display: none;
+        }
+      }
+
     </style>
   </head>
   <body>
-    <script type="text/javascript">
-      Utils.attachEvent(window, 'load', function() {
-        Engine.initialize();
-      });
+    <canvas id="c"></canvas>
+    <script>
+      var b = document.body
+      var c = document.getElementsByTagName('canvas')[0]
+      var a = c.getContext('2d')
 
+      document.body.clientWidth;
+
+      var presets = {
+        "preset": "Smooth",
+        "remembered": {
+          "New One": {
+            "0": {
+              "a": -2,
+              "b": 1.8,
+              "c": 1,
+              "d": 2,
+              "e": 1,
+              "f": -0.3
+            }
+          },
+          "Big": {
+            "0": {
+              "a": -2,
+              "b": 1.8,
+              "c": 1,
+              "d": 1.2,
+              "e": 0.8,
+              "f": -0.3
+            }
+          },
+          "Zoom-out": {
+            "0": {
+              "a": -2,
+              "b": 1.8,
+              "c": 1,
+              "d": 1.2,
+              "e": 0.4,
+              "f": 6
+            }
+          },
+          "Zoom-Max": {
+            "0": {
+              "a": -2,
+              "b": 1.8,
+              "c": 1,
+              "d": 1,
+              "e": 1.1,
+              "f": -0.2
+            }
+          },
+          "Smooth": {
+            "0": {
+              "a": 1.16,
+              "b": 0.19,
+              "c": 0.06,
+              "d": 1.23,
+              "e": -0.2,
+              "f": -0.2
+            }
+          },
+          "Def": {
+            "0": {
+              "a": 3,
+              "b": 2,
+              "c": 1,
+              "d": 2,
+              "e": 1,
+              "f": 3
+            }
+          }
+        },
+        "closed": false,
+        "folders": {}
+      }
+    </script>
+    <script>
+      // defines
+      b.style.margin = '0'
+
+      var w = window
+      var P = w.innerWidth
+      var H = w.innerHeight
+
+      c.width = P
+      c.height = H
+
+      var M = Math
+      var s = M.sin
+      var f = M.cos
+      var y = M.ceil
+      var r = M.random
+      var W = v = []
+      var D = M.PI / 180
+      var G = 'globalCompositeOperation'
+      var C = V = N = B = Z = Q = 0
+
+      a.a = a.fillRect
+
+      var d = 10
+      var hashOK = true
+      var hashOpts = window.location.hash.substr(1)
+        .split(':').map(function(el) {
+          var n = parseFloat(el)
+          if (!isNaN(n))
+            return n
+          else
+            hashOK = false
+        })
+
+      if (hashOK) {
+        presets['remembered']['Shared'] = { '0': {} }
+
+        ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el, index) {
+          presets['remembered']['Shared']['0'][el] = hashOpts[index]
+        })
+      }
+
+      var opt = {
+          a: 0
+        , b: 0
+        , c: 0
+        , d: 0
+        , e: 0
+        , f: 0
+      }
+
+      var MAX = 3
+      var gui = new dat.GUI({
+          load: presets
+        , preset: hashOK ? 'Shared' : 'Smooth'
+      })
+
+      gui.remember(opt)
+
+      ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el) {
+        gui.add(opt, el, -MAX, MAX).step(0.01).onFinishChange(function(val) {
+          var hash = []
+
+          ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(_el) {
+            hash.push(opt[_el])
+          })
+
+          window.location.hash = hash.join(':')
+        })
+      })
+
+      // draw it all
+      function draw() {
+        a.save();
+
+        // the plasma
+        for (i = y(P / d); i--;) {
+          C += 5E-4 * f(D * i * opt.b)
+          N += 0.001 * s(D /C * (d - i) * opt.d)
+          for (j = y(H / d); j--;) {
+
+            V += 0.001 * f(D * i * opt.e)
+            B += 0.00001 * s(D * (d - i/V) * opt.c)
+            h = (opt.f * 4 + 1) * i * f(D) + 100 * f(D * (C + B) / opt.a *10)
+            t = (opt.c * 4 + 1) * j * f((3 < opt.b) ? f(1/h) : f(1 / D)) + 100 * opt.e * s(D * (N + B) * opt.f / 720)
+
+            k = ((opt.d + 1) * (i + j) * opt.d * opt.b) * 50 * s(D * ((d - i) * h + (j - d) * h) * opt.d / 720)
+
+            h = (opt.e * 13 + 3) * f(D * h) + 30/opt.d * f(D * j)
+
+            K = y(40 * opt.e * opt.b) + y(9 * opt.b * f(D * t) + h)
+            L = y(40 * opt.c) + y(9 * opt.d * f(D * k) + h)
+
+            a.fillStyle = 'rgb(' + K + ',' + L + ',' + y((K + L) / 2 - h * opt.e) + ')'
+            a.a(i * d + Z / 2, j * d + Z / 2, d - Z, d - Z)
+          }
+        }
+
+        a.restore()
+        requestAnimationFrame(draw)
+      } // 33 - magic
+
+      requestAnimationFrame(draw)
+
+      window.addEventListener('resize', function() {
+        c.height = H = window.innerHeight
+        c.width = P = window.innerWidth
+      })
+    </script>
+    <div id="info">
+      <h2>Paweł Waleczek</h2>
+      <p>
+        <a href="mailto:pawel@thisismyasterisk.org">pawel@thisismyasterisk.org</a>
+        <br />
+        <a href="https://facebook.com/pawel.waleczek">facebook.com/pawel.waleczek</a>
+        <br />
+        <a href="https://twitter.com/pwaleczek">@pwaleczek</a>
+        <br />
+        <a href="http://pl.linkedin.com/pub/paweł-waleczek/53/316/533/">linkedin</a>
+      </p>
+    </div>
+    <!-- Google Analytics script | start -->
+    <script type="text/javascript">
 
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-23939407-3']);
-      _gaq.push(['_trackPageview']);
+      _gaq.push(['_setAccount', 'UA-23939407-1']);
+      _gaq.push(['_trackPageview', location.pathname + location.search + location.hash]);
 
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
+
     </script>
+    <!-- Google Analytics script | end -->
   </body>
 </html>

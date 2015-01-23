@@ -429,6 +429,8 @@ var Engine = {
 		x: 0,
 		y: 0
 	},
+	maxWidth: 1100,
+	maxHeight: 420,
 
 	worldOffset: {
 		x: 0,
@@ -682,8 +684,8 @@ var Engine = {
 
 	resize: function (event) {
 
-		Engine.renderCanvas.canvas.width = Engine.buffer.canvas.width = Math.max(window.innerWidth, 0);
-		Engine.renderCanvas.canvas.height = Engine.buffer.canvas.height = Math.max(window.innerHeight, 0);
+		Engine.renderCanvas.canvas.width = Engine.buffer.canvas.width = Math.max(window.innerWidth, Engine.maxWidth);
+		Engine.renderCanvas.canvas.height = Engine.buffer.canvas.height = Math.max(window.innerHeight, Engine.maxHeight);
 	}
 }
 

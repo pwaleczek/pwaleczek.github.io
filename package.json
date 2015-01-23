@@ -1,0 +1,27 @@
+{
+  "name": "pwaleczek.github.io",
+  "version": "0.0.1",
+  "description": "thisismyasterisk.org",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"No tests... Sorry.\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pwaleczek/pwaleczek.github.io.git"
+  },
+  "keywords": [
+    "thisismyasterisk",
+    "canvas",
+    "canvasquery"
+  ],
+  "author": "Paweł Waleczek <pawel@thisismyasterisk.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pwaleczek/pwaleczek.github.io/issues"
+  },
+  "homepage": "https://github.com/pwaleczek/pwaleczek.github.io",
+  "dependencies": {
+    "node-static": "^0.7.6"
+  }
+}
