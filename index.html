@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>JS1k, 1k demo submission [ID]</title>
+    <title>paweł waleczek</title>
     <meta charset="utf-8" />
     <meta name="robots" content="all" />
     <meta name="author" content="paweł waleczek" />
@@ -159,52 +159,100 @@
       a.a = a.fillRect
 
       var d = 10
-      var hashOK = true
-      var hashOpts = window.location.hash.substr(1)
-        .split(':').map(function(el) {
-          var n = parseFloat(el)
-          if (!isNaN(n))
-            return n
-          else
-            hashOK = false
-        })
+      var optDefaults = {
+          a: 1
+        , b: 1.62
+        , c: 0.84
+        , d: 1.3
+        , e: 1
+        , f: 2
+      }
 
-      if (hashOK) {
+      var opt = optDefaults
+      var hashOK = true
+
+      function hashChange() {
+        if (window.location.hash.length <= 1)
+          return false
+        if (window.location.hash.split(':').length !== 6)
+          return hashMessage()
+
+        var hashOpts = window.location.hash.substr(1)
+          .split(':').map(function(el) {
+            var n = parseFloat(el)
+            if (!isNaN(n))
+              return n
+            else
+              hashOK = false
+          })
+
+        if (hashOK) {
+          ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el, index) {
+            opt[el] = hashOpts[index]
+          })
+          setHash()
+        } else {
+          hashMessage()
+          opt = optDefaults
+        }
+
+      } hashChange()
+
+      function hashMessage(text) {
+        var counter = 1
+        var interval = setInterval(function() {
+          if (counter === 6) {
+            clearInterval(interval)
+            return setHash()
+          }
+
+          if (counter%2) {
+            window.location.hash = text || 'HASH---NOT---CORRECT!'
+          } else {
+            window.location.hash = '-----------------'
+          }
+
+          counter++
+        }, 1000)
+      }
+
+      function setHash() {
+        var hash = []
+
+        ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el) {
+          hash.push(opt[el])
+        })
+        hashOK = true
+        window.location.hash = hash.join(':')
+      }
+
+      function showControls() {
         presets['remembered']['Shared'] = { '0': {} }
 
         ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el, index) {
-          presets['remembered']['Shared']['0'][el] = hashOpts[index]
+          presets['remembered']['Shared']['0'][el] = opt[index]
         })
-      }
 
-      var opt = {
-          a: 0
-        , b: 0
-        , c: 0
-        , d: 0
-        , e: 0
-        , f: 0
-      }
+        var MAX = 3
+        var gui = new dat.GUI({
+            load: presets
+          , preset: hashOK ? 'Shared' : 'Smooth'
+        })
 
-      var MAX = 3
-      var gui = new dat.GUI({
-          load: presets
-        , preset: hashOK ? 'Shared' : 'Smooth'
-      })
+        gui.remember(opt)
 
-      gui.remember(opt)
+        ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el) {
+          gui.add(opt, el, -MAX, MAX).step(0.01).onFinishChange(function(val) {
+            var hash = []
 
-      ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el) {
-        gui.add(opt, el, -MAX, MAX).step(0.01).onFinishChange(function(val) {
-          var hash = []
+            ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(_el) {
+              hash.push(opt[_el])
+            })
 
-          ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(_el) {
-            hash.push(opt[_el])
+            window.location.hash = hash.join(':')
           })
-
-          window.location.hash = hash.join(':')
         })
-      })
+      }
 
       // draw it all
       function draw() {
