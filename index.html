@@ -161,12 +161,12 @@
 
       var d = 10
       var optDefaults = {
-          a: 1
-        , b: 1.62
-        , c: 0.84
-        , d: 1.3
-        , e: 1
-        , f: 2
+          a: -0.66
+        , b: 0.51
+        , c: 1.03
+        , d: 0.64
+        , e: 0.84
+        , f: 1.16
       }
 
       var opt = optDefaults
@@ -254,11 +254,11 @@
           })
         })
       }
-
+      var t0 = new Date().getTime()
+      var tn = 0
       // draw it all
       function draw() {
         a.save();
-
         // the plasma
         for (i = y(P / d); i--;) {
           C += 5E-4 * f(D * i * opt.b)
@@ -266,22 +266,22 @@
           for (j = y(H / d); j--;) {
 
             V += 0.001 * f(D * i * opt.e)
-            B += 0.00001 * s(D * (d - i/V) * opt.c)
-            h = (opt.f * 4 + 1) * i * f(D) + 100 * f(D * (C + B) / opt.a *10)
+            B += 0.00001 * s(D * (d - i) * opt.c)
+            h = (opt.f * 4 + 1) * i * s(D) + 100 * f(D * (C + B) / opt.a * V)
             t = (opt.c * 4 + 1) * j * f((3 < opt.b) ? f(1/h) : f(1 / D)) + 100 * opt.e * s(D * (N + B) * opt.f / 720)
 
-            k = ((opt.d + 1) * (i + j) * opt.d * opt.b) * 50 * s(D * ((d - i) * h + (j - d) * h) * opt.d / 720)
+            k = ((opt.d + 1) * (i + j) * opt.d * opt.b) * 50 * f(D * (s(d - i) * h + (j - d) * h) * opt.d / 720)
 
             h = (opt.e * 13 + 3) * f(D * h) + 30/opt.d * f(D * j)
 
-            K = y(40 * opt.e * opt.b) + y(9 * opt.b * f(D * t) + h)
-            L = y(40 * opt.c) + y(9 * opt.d * f(D * k) + h)
+            K = (40 * opt.e * opt.b) + y(9 * opt.b * f(D * t) + h)
+            L = (40 * opt.c) + y(9 * opt.d * s(D * k))
 
             a.fillStyle = 'rgb(' + K + ',' + L + ',' + y((K + L) / 2 - h * opt.e) + ')'
             a.a(i * d + Z / 2, j * d + Z / 2, d - Z, d - Z)
           }
         }
-
+        tn = t0 - new Date().getTime()
         a.restore()
         requestAnimationFrame(draw)
       } // 33 - magic
