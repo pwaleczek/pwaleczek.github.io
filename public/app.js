@@ -176,6 +176,7 @@
 
     canvas = cq().appendTo(document.body)
     buffer = cq()
+
     bgImage.src = '/public/bg.png'
     audioContext = new AudioContext()
 
