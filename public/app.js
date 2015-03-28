@@ -176,7 +176,7 @@
 
     canvas = cq().appendTo(document.body)
     buffer = cq()
-    bgImage.src = '/bg.png'
+    bgImage.src = '/knapff/bg.png'
     audioContext = new AudioContext()
 
     navigator.webkitGetUserMedia({
