@@ -271,7 +271,7 @@
             V += 0.001 * f(D * i * opt.d)
             B += 0.00001 * s(D * (d - i) * opt.c)
             h = (opt.f * 4 + 1) * i * s(D) + 100 * f(D * (C + B) / opt.a * V)
-            t = (opt.c * 4 + 1) * j * f((3 < opt.b) ? f(1/h) : f(1 / D)) + 100 * opt.e * s(D * (N + B) * opt.d§ / 720)
+            t = (opt.c * 4 + 1) * j * f((3 < opt.b) ? f(1/h) : f(1 / D)) + 100 * opt.e * s(D * (N + B) * opt.d / 720)
 
             k = ((opt.d + 1) * (i + j) * opt.d * opt.b) * 50 * f(D * (s(d - i) * h + (j - d) * h) * opt.d / 720)
 
@@ -280,7 +280,7 @@
             K = (40 * opt.e * opt.b) + y(9 * opt.b * f(D * t) + h)
             L = (40 * opt.c) + y(9 * opt.d * s(D * k))
 
-            a.fillStyle = 'rgb(' + K + ',' + L + ',' + y((K + L) / 2 - h * opt.e) + ')'
+            a.fillStyle = 'rgb(' + K + ',' + L + ',' + y((K + L) / 2 - h) + ')'
             a.a(i * d + Z / 2, j * d + Z / 2, d - Z, d - Z)
           }
         }
