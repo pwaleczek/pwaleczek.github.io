@@ -358,7 +358,9 @@ User.prototype = {
 
 	onStep: function (delta) {
 		if(this.moving) {
-			this.animationStep += 0.5 * this.speed * delta/1000;
+			// console.log(delta, this.animationStep)
+
+			this.animationStep += (0.5 * this.speed * delta / 1000);
 			if(this.animationStep >= 9) {
 				this.animationStep = 0;
 				this.moveProggres++;
@@ -459,9 +461,24 @@ var Engine = {
 
 
 		Utils.attachEvent(window, 'resize', this.resize);
+		Utils.attachEvent(this.renderCanvas.canvas, 'touchend', function(event) {
+			console.log('touchEnd')
+			var touch = event.changedTouches[0]
+			console.log(event)
+			_engine.onMouseUp(touch.pageX, touch.pageY);
+		});
 		Map.initialize();
 
 		this.Map.load('temp');
+
+		this.devicePixelRatio = window.devicePixelRatio || 1,
+    this.backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                             context.mozBackingStorePixelRatio ||
+                             context.msBackingStorePixelRatio ||
+                             context.oBackingStorePixelRatio ||
+                             context.backingStorePixelRatio || 1,
+
+    this.ratio = this.devicePixelRatio / this.backingStoreRatio;
 
 		this.images = Utils.imagePreloader(['cube','mark_tiles'], function (imageList) {
 			//_engine.Map.draw();
@@ -519,7 +536,7 @@ var Engine = {
 
 		this.renderCanvas.onRender(function (delta) {
 			_engine.onRender(_engine.buffer, delta);
-		}).onStep(this.onStep.bind(this))
+		})/*.onStep(this.onStep.bind(this))*/
 			.onMouseUp(this.onMouseUp.bind(this))
 		  .onMouseDown(this.onMouseDown.bind(this))
 			.onMouseMove(this.onMouseMove.bind(this));
@@ -679,11 +696,28 @@ var Engine = {
 			ctx.font("16pt Arial").fillText(this.label, 20, window.innerHeight - 20);
 			ctx.restore();
 			this.renderCanvas.drawImage(ctx.canvas, 0, 0);
+			this.onStep(delta)
 		}
 	},
 
 	resize: function (event) {
+    if (Engine.devicePixelRatio !== Engine.backingStoreRatio) {
 
+      var oldWidth = canvas.width;
+      var oldHeight = canvas.height;
+
+      Engine.renderCanvas.width = oldWidth * ratio;
+      canvas.height = oldHeight * ratio;
+
+      canvas.style.width = oldWidth + 'px';
+      canvas.style.height = oldHeight + 'px';
+
+      // now scale the context to counter
+      // the fact that we've manually scaled
+      // our canvas element
+      context.scale(ratio, ratio);
+
+    }
 		Engine.renderCanvas.canvas.width = Engine.buffer.canvas.width = Math.max(window.innerWidth, Engine.maxWidth);
 		Engine.renderCanvas.canvas.height = Engine.buffer.canvas.height = Math.max(window.innerHeight, Engine.maxHeight);
 	}

@@ -9,7 +9,6 @@
     <meta name="robots" content="all" />
     <meta name="author" content="paweł waleczek" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <script src="/dat.gui.js"></script>
     <style type="text/css" media="screen, print">
       html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure,  footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
         margin:0;
@@ -69,222 +68,102 @@
       var c = document.getElementsByTagName('canvas')[0]
       var a = c.getContext('2d')
 
-      document.body.clientWidth;
+      b.clientWidth;
 
-      var presets = {
-        "preset": "Smooth",
-        "remembered": {
-          "New One": {
-            "0": {
-              "a": -2,
-              "b": 1.8,
-              "c": 1,
-              "d": 2,
-              "e": 1,
-              "f": -0.3
-            }
-          },
-          "Big": {
-            "0": {
-              "a": -2,
-              "b": 1.8,
-              "c": 1,
-              "d": 1.2,
-              "e": 0.8,
-              "f": -0.3
-            }
-          },
-          "Zoom-out": {
-            "0": {
-              "a": -2,
-              "b": 1.8,
-              "c": 1,
-              "d": 1.2,
-              "e": 0.4,
-              "f": 6
-            }
-          },
-          "Zoom-Max": {
-            "0": {
-              "a": -2,
-              "b": 1.8,
-              "c": 1,
-              "d": 1,
-              "e": 1.1,
-              "f": -0.2
-            }
-          },
-          "Smooth": {
-            "0": {
-              "a": 1.16,
-              "b": 0.19,
-              "c": 0.06,
-              "d": 1.23,
-              "e": -0.2,
-              "f": -0.2
-            }
-          },
-          "Def": {
-            "0": {
-              "a": 3,
-              "b": 2,
-              "c": 1,
-              "d": 2,
-              "e": 1,
-              "f": 3
-            }
-          }
-        },
-        "closed": false,
-        "folders": {}
+      b.style.margin = "0";
+      w = window;
+      P = w.innerWidth;
+      H = w.innerHeight;
+      c.width = P;
+      c.height = H;
+      M = Math;
+      s = M.sin;
+      f = M.cos;
+      y = M.ceil;
+      r = M.random;
+      W = v = [];
+      D = M.PI / 180;
+      G = "globalCompositeOperation";
+      C = V = N = B = Z = Q = 0;
+      a.a = a.fillRect;
+      d = 20;
+
+      // generate random plasma gradient
+      function I() {
+        for (u = 6; u--;) v[u] = y(3 * r());
       }
-    </script>
-    <script>
-      // defines
-      b.style.margin = '0'
+      I();
 
-      var w = window
-      var P = w.innerWidth
-      var H = w.innerHeight
-
-      c.width = P
-      c.height = H
-
-      var M = Math
-      var s = M.sin
-      var f = M.cos
-      var y = M.ceil
-      var r = M.random
-      var W = v = []
-      var D = M.PI / 180
-      var G = 'globalCompositeOperation'
-      var C = V = N = B = Z = Q = 0
-
-      a.a = a.fillRect
-
-      var d = 10
-      var optDefaults = {
-          a: -0.33
-        , b: 2.2
-        , c: 1.94
-        , d: 1.23
-        , e: 0.97
-        , f: 0.64
+      b.onclick = function() {
+        Z = 1;
       }
 
-      var opt = optDefaults
-      var hashOK = true
+      // fill the ripple queue
+      b.onmousemove = function (e) {
+        W.push([y(e.pageX/d-1)*d,y(e.pageY/d-1)*d,0])
+      };
 
-      function hashChange() {
-        if (window.location.hash.length <= 1)
-          return false
-        if (window.location.hash.split(':').length !== 6)
-          return hashMessage()
-
-        var hashOpts = window.location.hash.substr(1)
-          .split(':').map(function(el) {
-            var n = parseFloat(el)
-            if (!isNaN(n))
-              return n
-            else
-              hashOK = false
-          })
-
-        if (hashOK) {
-          ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el, index) {
-            opt[el] = hashOpts[index]
-          })
-          setHash()
-        } else {
-          hashMessage()
-          opt = optDefaults
-        }
-
-      } hashChange()
-
-      function hashMessage(text) {
-        var counter = 1
-        var interval = setInterval(function() {
-          if (counter === 6) {
-            clearInterval(interval)
-            return setHash()
-          }
-
-          if (counter%2) {
-            window.location.hash = text || 'HASH---NOT---CORRECT!'
-          } else {
-            window.location.hash = '-----------------'
-          }
-
-          counter++
-        }, 1000)
-      }
-
-      function setHash() {
-        var hash = []
-
-        ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el) {
-          hash.push(opt[el])
-        })
-        hashOK = true
-        window.location.hash = hash.join(':')
-      }
-
-      function showControls() {
-        presets['remembered']['Shared'] = { '0': {} }
-
-        ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el, index) {
-          presets['remembered']['Shared']['0'][el] = opt[index]
-        })
-
-        var MAX = 3
-        var gui = new dat.GUI({
-            load: presets
-          , preset: hashOK ? 'Shared' : 'Smooth'
-        })
-
-        gui.remember(opt)
-
-        ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(el) {
-          gui.add(opt, el, -MAX, MAX).step(0.01).onFinishChange(function(val) {
-            var hash = []
-
-            ;['a', 'b', 'c', 'd', 'e', 'f'].forEach(function(_el) {
-              hash.push(opt[_el])
-            })
-
-            window.location.hash = hash.join(':')
-          })
-        })
-      }
-      var t0 = new Date().getTime()
-      var tn = 0
       // draw it all
       function draw() {
         a.save();
-        // the plasma
-        for (i = y(P / d); i--;) {
-          C += 5E-4 * f(D * i * opt.b)
-          N += 0.001 * s(D /C * (d - i) * opt.d)
+
+        for (var i = y(P / d); i--;) {
+          C += 5E-4 * f(D * i * v[1]);
+          N += 0.001 * s(D * (d - i) * v[3]);
           for (j = y(H / d); j--;) {
 
-            V += 0.001 * f(D * i * opt.e)
-            B += 0.00001 * s(D * (d - i) * opt.c)
-            h = (opt.f * 4 + 1) * i * s(D) + 100 * f(D * (C + B) / opt.a * V)
-            t = (opt.c * 4 + 1) * j * f((3 < opt.b) ? f(1/h) : f(1 / D)) + 100 * opt.e * s(D * (N + B) * opt.f / 720)
+            V += 0.001 * f(D * i * v[4]);
+            B += 0.001 * s(D * (d - i) * v[2]);
+            h = (v[2] * 4 + 1) * i * f(D) + 100 * v[3] * f(D * (C + V) * v[1] + v[4]);
+            t = (v[2] * 4 + 1) * j * f((3 < v[1]) ? f(1/h) : f(1 / D)) + 100 * v[4] * s(D * (N + B) * v[5] / 720);
 
-            k = ((opt.d + 1) * (i + j) * opt.d * opt.b) * 50 * f(D * (s(d - i) * h + (j - d) * h) * opt.d / 720)
+            k = ((v[3] + 1) * (i + j) * v[3] * v[2]) * 50 * s(D * ((d - i) * h + (j - d) * h) * v[4] / 720);
 
-            h = (opt.e * 13 + 3) * f(D * h) + 30/opt.d * f(D * j)
+            h = (v[4] * 13 + 3) * f(D * h) + 30/v[3] * f(D * j);
 
-            K = (40 * opt.e * opt.b) + y(9 * opt.b * f(D * t) + h)
-            L = (40 * opt.c) + y(9 * opt.d * s(D * k))
+            K = y(40 * v[4] * v[1]) + y(9 * v[1] * f(D * t) + h);
+            L = y(40 * v[2]) + y(9 * v[1] * f(D * k) + h);
 
-            a.fillStyle = 'rgb(' + K + ',' + L + ',' + y((K + L) / 2 - h * opt.e) + ')'
-            a.a(i * d + Z / 2, j * d + Z / 2, d - Z, d - Z)
+            a.fillStyle = "rgb(" + K + "," + L + "," + y((K + L) / 2 - h * v[4]) + ")";
+            a.a(i * d + Z / 2, j * d + Z / 2, d - Z, d - Z);
+
+            // animate transition between old and new plasma gradients
+            if(Z >= 0 && Z < d){
+              if(0 == Q) {
+                Z += 0.001;
+                if(Z >= d) {
+                  Q = 1;
+                  I();
+                }
+              } if(1 == Q) {
+                Z -= 0.001;
+                if(Z <= 0) {
+                  Q = 0;
+                }
+              }
+            }
           }
         }
-        tn = t0 - new Date().getTime()
+        // set composite operations to lighter (looks better this way)
+        a[G] = "lighter";
+
+        // draw ripples under cursor (from the ripple queue)
+        U = W.length;
+        while(U--){
+          O = W[U];
+
+          for (R = -O[2] * d; R < O[2] * d; R++) {
+            S = (M.sqrt(O[2] * O[2] - R * R)) * d;
+
+            a.fillStyle = 'rgba(105,105,105,' + ((O[2] - 6) / -10) + ')';
+            a.a(O[0] + R * d, O[1] + S, d, d);
+            a.a(O[0] - R * d, O[1] - S, d, d);
+          }
+
+          O[2] += 0.33;
+          if(O[2] >= 6) W.splice(U, 1);
+        }
+
         a.restore()
         requestAnimationFrame(draw)
       } // 33 - magic
