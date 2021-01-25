@@ -478,7 +478,7 @@ var Engine = {
 //                              context.oBackingStorePixelRatio ||
 //                              context.backingStorePixelRatio || 1,
 
-    this.ratio = window.devicePixelRatio || 1; //this.devicePixelRatio / this.backingStoreRatio;
+    		this.ratio = 1;
 
 		this.images = Utils.imagePreloader(['cube','mark_tiles'], function (imageList) {
 			//_engine.Map.draw();
