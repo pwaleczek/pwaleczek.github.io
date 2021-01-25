@@ -471,14 +471,14 @@ var Engine = {
 
 		this.Map.load('temp');
 
-		this.devicePixelRatio = window.devicePixelRatio || 1,
-    this.backingStoreRatio = context.webkitBackingStorePixelRatio ||
-                             context.mozBackingStorePixelRatio ||
-                             context.msBackingStorePixelRatio ||
-                             context.oBackingStorePixelRatio ||
-                             context.backingStorePixelRatio || 1,
+// 		this.devicePixelRatio = window.devicePixelRatio || 1,
+//     this.backingStoreRatio = context.webkitBackingStorePixelRatio ||
+//                              context.mozBackingStorePixelRatio ||
+//                              context.msBackingStorePixelRatio ||
+//                              context.oBackingStorePixelRatio ||
+//                              context.backingStorePixelRatio || 1,
 
-    this.ratio = this.devicePixelRatio / this.backingStoreRatio;
+    this.ratio = window.devicePixelRatio || 1; //this.devicePixelRatio / this.backingStoreRatio;
 
 		this.images = Utils.imagePreloader(['cube','mark_tiles'], function (imageList) {
 			//_engine.Map.draw();
